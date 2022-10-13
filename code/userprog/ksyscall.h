@@ -28,9 +28,7 @@ char _numberBuffer[MAX_NUM_LENGTH + 2];//cai 1 neu du va cai 2 luu vi tri blank 
 char isBlank(char c) { return c == LF || c == CR || c == TAB || c == SPACE; }
 
 /**
- * Read and store characters in the _numberBuffer until blank
- *
- * It will read at most MAX_NUM_LENGTH + 1 character
+ *Doc cho den khi vi tri rong
  **/
 void readUntilBlank() {
     memset(_numberBuffer, 0, sizeof(_numberBuffer));
@@ -55,8 +53,7 @@ void readUntilBlank() {
 }
 
 /**
- * Return true of the interger equals to the
- * interger stored in the string
+ *Tra ve True khi gia tri int bang voi so duoc bieu hien o string
  **/
 bool compareNumAndString(int integer, const char *s) {
     if (integer == 0) return strcmp(s, "0") == 0;
@@ -127,29 +124,12 @@ int SysReadNum() {
     }
 
     if (nega)
-        /**
-         * This is why we need to handle -2147483648 individually:
-         * 2147483648 is larger than the range of int32
-         */
         num = -num;
 
-    // It's safe to return directly if the number is small
-    if (len <= MAX_NUM_LENGTH - 2) return num;
+    
+    if (len <= MAX_NUM_LENGTH - 2) return num;//neu nho hon INT_MAX thi return lun ve num
 
-    /**
-     * We need to make sure that number is equal to the number in the buffer.
-     *
-     * Ask: Why do we need that?
-     * Answer: Because it's impossible to tell whether the number is bigger
-     * than INT32_MAX or smaller than INT32_MIN if it has the same length.
-     *
-     * For example: 3 000 000 000.
-     *
-     * In that case, that number will cause an overflow. However, C++
-     * doens't raise interger overflow, so we need to make sure that the input
-     * string and the output number is equal.
-     *
-     */
+    
     if (compareNumAndString(num, _numberBuffer))//neu ta cho 3 000 000 000 thi num chi luu INT_MAX nen ko bao loi tran bo nho the nen ta can kiem tra xem num co that bang
         return num;
     else
