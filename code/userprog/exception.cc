@@ -86,7 +86,7 @@ ExceptionHandler(ExceptionType which)
 	  kernel->machine->WriteRegister(PrevPCReg, kernel->machine->ReadRegister(PCReg));
 
 	  /* set programm counter to next instruction (all Instructions are 4 byte wide)*/
-	  kernel->machine->WriteRegister(PCReg, kernel->machine->ReadRegister(PCReg) + 4);//+4 vi ly do o doan 2:00:22 cua video tu quay lai buoi demo
+	  kernel->machine->WriteRegister(PCReg, kernel->machine->ReadRegister(PCReg) + 4);
 	  
 	  /* set next programm counter for brach execution */
 	  kernel->machine->WriteRegister(NextPCReg, kernel->machine->ReadRegister(PCReg)+4);
@@ -102,13 +102,13 @@ ExceptionHandler(ExceptionType which)
 	
 	result=	SysReadNum();
 	DEBUG(dbgSys, "input: " << result << "\n");
-	kernel->machine->WriteRegister(2, result);//thanh ghi 2 la noi luu tru gia tri cua gia tri tra ve cua ReadNum() o file ReadNum.c
+	kernel->machine->WriteRegister(2, result);
 	{
 	  /* set previous programm counter (debugging only)*/
 	  kernel->machine->WriteRegister(PrevPCReg, kernel->machine->ReadRegister(PCReg));
 
 	  /* set programm counter to next instruction (all Instructions are 4 byte wide)*/
-	  kernel->machine->WriteRegister(PCReg, kernel->machine->ReadRegister(PCReg) + 4);//+4 vi ly do o doan 2:00:22 cua video tu quay lai buoi demo
+	  kernel->machine->WriteRegister(PCReg, kernel->machine->ReadRegister(PCReg) + 4);
 	  
 	  /* set next programm counter for brach execution */
 	  kernel->machine->WriteRegister(NextPCReg, kernel->machine->ReadRegister(PCReg)+4);
@@ -122,17 +122,17 @@ ExceptionHandler(ExceptionType which)
 
 	case SC_PrintNum:
 	int x;
-	x=(int)kernel->machine->ReadRegister(4);//doc tham so truyen vao(value cac tham so truyen vao cua tat ca cac function se duoc luu vao thanh ghi 4,5,6...)
+	x=(int)kernel->machine->ReadRegister(4);
 	PrintNum(x);
 
-	//khong co cai Modify ben duoi thi ko hieu sao no chay mai mai lun!!!!
+	
 	/* Modify return point */
 	{
 	  /* set previous programm counter (debugging only)*/
 	  kernel->machine->WriteRegister(PrevPCReg, kernel->machine->ReadRegister(PCReg));
 
 	  /* set programm counter to next instruction (all Instructions are 4 byte wide)*/
-	  kernel->machine->WriteRegister(PCReg, kernel->machine->ReadRegister(PCReg) + 4);//+4 vi ly do o doan 2:00:22 cua video tu quay lai buoi demo
+	  kernel->machine->WriteRegister(PCReg, kernel->machine->ReadRegister(PCReg) + 4);
 	  
 	  /* set next programm counter for brach execution */
 	  kernel->machine->WriteRegister(NextPCReg, kernel->machine->ReadRegister(PCReg)+4);
@@ -148,13 +148,13 @@ ExceptionHandler(ExceptionType which)
 	result=RandomNum();
 	DEBUG(dbgSys, "Random: " << result << "\n");
 
-	kernel->machine->WriteRegister(2, result);//thanh ghi 2 la noi luu tru gia tri cua gia tri tra ve cua RandomNum() o file ReadNum.c
+	kernel->machine->WriteRegister(2, result);
 	{
 	  /* set previous programm counter (debugging only)*/
 	  kernel->machine->WriteRegister(PrevPCReg, kernel->machine->ReadRegister(PCReg));
 
 	  /* set programm counter to next instruction (all Instructions are 4 byte wide)*/
-	  kernel->machine->WriteRegister(PCReg, kernel->machine->ReadRegister(PCReg) + 4);//+4 vi ly do o doan 2:00:22 cua video tu quay lai buoi demo
+	  kernel->machine->WriteRegister(PCReg, kernel->machine->ReadRegister(PCReg) + 4);
 	  
 	  /* set next programm counter for brach execution */
 	  kernel->machine->WriteRegister(NextPCReg, kernel->machine->ReadRegister(PCReg)+4);
@@ -174,7 +174,7 @@ ExceptionHandler(ExceptionType which)
 	  kernel->machine->WriteRegister(PrevPCReg, kernel->machine->ReadRegister(PCReg));
 
 	  /* set programm counter to next instruction (all Instructions are 4 byte wide)*/
-	  kernel->machine->WriteRegister(PCReg, kernel->machine->ReadRegister(PCReg) + 4);//+4 vi ly do o doan 2:00:22 cua video tu quay lai buoi demo
+	  kernel->machine->WriteRegister(PCReg, kernel->machine->ReadRegister(PCReg) + 4);
 	  
 	  /* set next programm counter for brach execution */
 	  kernel->machine->WriteRegister(NextPCReg, kernel->machine->ReadRegister(PCReg)+4);
