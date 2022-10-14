@@ -202,6 +202,13 @@ RandomNum:
 	j	$31
 	.end RandomNum
 
+	.globl ReadChar
+	.ent ReadChar
+ReadChar:
+	addiu $2,$0,SC_ReadChar
+	syscall
+	j $31
+	.end ReadChar
 
 
 	.globl PrintChar
