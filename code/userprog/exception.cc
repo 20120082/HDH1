@@ -52,14 +52,47 @@ void IncreaseProgramCounter()
 {
 	/* Modify return point */
 	{
+<<<<<<< HEAD
 		/* set previous programm counter (debugging only)*/
 		kernel->machine->WriteRegister(PrevPCReg, kernel->machine->ReadRegister(PCReg));
+=======
+	  /* set previous programm counter (debugging only)*/
+	  kernel->machine->WriteRegister(PrevPCReg, kernel->machine->ReadRegister(PCReg));
+
+	  /* set programm counter to next instruction (all Instructions are 4 byte wide)*/
+	  kernel->machine->WriteRegister(PCReg, kernel->machine->ReadRegister(PCReg) + 4);
+	  
+	  /* set next programm counter for brach execution */
+	  kernel->machine->WriteRegister(NextPCReg, kernel->machine->ReadRegister(PCReg)+4);
+	}
+
+	return;
+	
+	ASSERTNOTREACHED();
+>>>>>>> 0c0d6ec36194a54db7387a8ecf759b377c758961
 
 		/* set programm counter to next instruction (all Instructions are 4 byte wide so we need to add 4)*/
 		kernel->machine->WriteRegister(PCReg, kernel->machine->ReadRegister(PCReg) + 4);
 
+<<<<<<< HEAD
 		/* set next programm counter for brach execution */
 		kernel->machine->WriteRegister(NextPCReg, kernel->machine->ReadRegister(PCReg)+4);
+=======
+	case SC_ReadNum:
+	
+	result=	SysReadNum();
+	DEBUG(dbgSys, "input: " << result << "\n");
+	kernel->machine->WriteRegister(2, result);
+	{
+	  /* set previous programm counter (debugging only)*/
+	  kernel->machine->WriteRegister(PrevPCReg, kernel->machine->ReadRegister(PCReg));
+
+	  /* set programm counter to next instruction (all Instructions are 4 byte wide)*/
+	  kernel->machine->WriteRegister(PCReg, kernel->machine->ReadRegister(PCReg) + 4);
+	  
+	  /* set next programm counter for brach execution */
+	  kernel->machine->WriteRegister(NextPCReg, kernel->machine->ReadRegister(PCReg)+4);
+>>>>>>> 0c0d6ec36194a54db7387a8ecf759b377c758961
 	}
 }
 
@@ -68,6 +101,7 @@ ExceptionHandler(ExceptionType which)
 {
     int type = kernel->machine->ReadRegister(2);
 
+<<<<<<< HEAD
     DEBUG(dbgSys, "Received Exception " << which << " type: " << type << "\n");
 
     switch (which)
@@ -127,6 +161,68 @@ ExceptionHandler(ExceptionType which)
 
 					return IncreaseProgramCounter();
 				}
+=======
+	case SC_PrintNum:
+	int x;
+	x=(int)kernel->machine->ReadRegister(4);
+	PrintNum(x);
+
+	
+	/* Modify return point */
+	{
+	  /* set previous programm counter (debugging only)*/
+	  kernel->machine->WriteRegister(PrevPCReg, kernel->machine->ReadRegister(PCReg));
+
+	  /* set programm counter to next instruction (all Instructions are 4 byte wide)*/
+	  kernel->machine->WriteRegister(PCReg, kernel->machine->ReadRegister(PCReg) + 4);
+	  
+	  /* set next programm counter for brach execution */
+	  kernel->machine->WriteRegister(NextPCReg, kernel->machine->ReadRegister(PCReg)+4);
+	}
+	return;
+	
+	ASSERTNOTREACHED();
+
+	break;
+
+
+	case SC_RandomNum:
+	result=RandomNum();
+	DEBUG(dbgSys, "Random: " << result << "\n");
+
+	kernel->machine->WriteRegister(2, result);
+	{
+	  /* set previous programm counter (debugging only)*/
+	  kernel->machine->WriteRegister(PrevPCReg, kernel->machine->ReadRegister(PCReg));
+
+	  /* set programm counter to next instruction (all Instructions are 4 byte wide)*/
+	  kernel->machine->WriteRegister(PCReg, kernel->machine->ReadRegister(PCReg) + 4);
+	  
+	  /* set next programm counter for brach execution */
+	  kernel->machine->WriteRegister(NextPCReg, kernel->machine->ReadRegister(PCReg)+4);
+	}
+	return;
+	
+	ASSERTNOTREACHED();
+	break;
+
+	case SC_PrintChar:
+	char c;
+	c=kernel->machine->ReadRegister(4);
+	PrintChar(c);
+	/* Modify return point */
+	{
+	  /* set previous programm counter (debugging only)*/
+	  kernel->machine->WriteRegister(PrevPCReg, kernel->machine->ReadRegister(PCReg));
+
+	  /* set programm counter to next instruction (all Instructions are 4 byte wide)*/
+	  kernel->machine->WriteRegister(PCReg, kernel->machine->ReadRegister(PCReg) + 4);
+	  
+	  /* set next programm counter for brach execution */
+	  kernel->machine->WriteRegister(NextPCReg, kernel->machine->ReadRegister(PCReg)+4);
+	}
+	return;
+>>>>>>> 0c0d6ec36194a54db7387a8ecf759b377c758961
 	
 				case SC_ReadChar:
 				{
