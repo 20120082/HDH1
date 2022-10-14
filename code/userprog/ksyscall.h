@@ -180,17 +180,6 @@ int RandomNum()
     return x;
 }
 
-void ascii()
-{
-    for (int i=33;i<=126;i++)
-    {
-        PrintNum(i);
-        kernel->synchConsoleOut->PutChar(':');
-        kernel->synchConsoleOut->PutChar(i);
-        kernel->synchConsoleOut->PutChar(13);
-        kernel->synchConsoleOut->PutChar(10);
-    }
-}
 
 void PrintChar(char x)
 {
