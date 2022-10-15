@@ -14,7 +14,7 @@
 #include "kernel.h"
 #include "synchconsole.h"
 #include <stdint.h>
-#include <stdlib.h>//dung cho srand
+#include <stdlib.h>
 
 #define LF ((char)10)
 #define CR ((char)13)
