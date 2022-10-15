@@ -23,11 +23,11 @@
 #define SC_Exec		2
 #define SC_Join		3
 #define SC_Create	4
-#define SC_Remove       5
+#define SC_Remove   5
 #define SC_Open		6
 #define SC_Read		7
 #define SC_Write	8
-#define SC_Seek         9
+#define SC_Seek     9
 #define SC_Close	10
 #define SC_ThreadFork	11
 #define SC_ThreadYield	12
@@ -38,7 +38,8 @@
 #define SC_ReadNum 16
 #define SC_PrintNum 17
 #define SC_RandomNum 18
-#define SC_PrintChar 19
+#define SC_ReadChar 19
+#define SC_PrintChar 20
 #define SC_Add		42
 
 #ifndef IN_ASM
@@ -185,6 +186,7 @@ void PrintNum(int number);
 
 int RandomNum();
 
+char ReadChar();
 
 void PrintChar(char x);
 #endif /* IN_ASM */

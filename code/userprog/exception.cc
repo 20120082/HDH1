@@ -48,6 +48,21 @@
 //	is in machine.h.
 //----------------------------------------------------------------------
 
+void IncreaseProgramCounter()
+{
+	/* Modify return point */
+	{
+		/* set previous programm counter (debugging only)*/
+		kernel->machine->WriteRegister(PrevPCReg, kernel->machine->ReadRegister(PCReg));
+
+		/* set programm counter to next instruction (all Instructions are 4 byte wide so we need to add 4)*/
+		kernel->machine->WriteRegister(PCReg, kernel->machine->ReadRegister(PCReg) + 4);
+
+		/* set next programm counter for brach execution */
+		kernel->machine->WriteRegister(NextPCReg, kernel->machine->ReadRegister(PCReg)+4);
+	}
+}
+
 void
 ExceptionHandler(ExceptionType which)
 {
@@ -57,142 +72,88 @@ ExceptionHandler(ExceptionType which)
 
     switch (which)
 	{
-    case SyscallException:
-      switch(type) 
-	  {
-      case SC_Halt:
-	DEBUG(dbgSys, "Shutdown, initiated by user program.\n");
+		case SyscallException:
+		{
+			switch(type) 
+			{
+				case SC_Halt:
+				{
+					DEBUG(dbgSys, "Shutdown, initiated by user program.\n");
+					SysHalt();
+					ASSERTNOTREACHED();
+				}
+				break;
 
-	SysHalt();
-
-	ASSERTNOTREACHED();
-	break;
-
-      case SC_Add://ham add la tra ve int (int add())
-	DEBUG(dbgSys, "Add " << kernel->machine->ReadRegister(4) << " + " << kernel->machine->ReadRegister(5) << "\n");
+				case SC_Add: //ham add la tra ve int (int add())
+				{
+					DEBUG(dbgSys, "Add " << kernel->machine->ReadRegister(4) << " + " << kernel->machine->ReadRegister(5) << "\n");
 	
-	/* Process SysAdd Systemcall*/
-	int result;
-	result = SysAdd(/* int op1 */(int)kernel->machine->ReadRegister(4),
-			/* int op2 */(int)kernel->machine->ReadRegister(5));
+					/* Process SysAdd Systemcall*/
+					int result_add;
+					result_add = SysAdd(/* int op1 */ (int)kernel->machine->ReadRegister(4),
+							/* int op2 */(int)kernel->machine->ReadRegister(5));
 
-	DEBUG(dbgSys, "Add returning with " << result << "\n");
-	/* Prepare Result */
-	kernel->machine->WriteRegister(2, (int)result);
+					DEBUG(dbgSys, "Add returning with " << result_add << "\n");
+					/* Prepare Result */
+					kernel->machine->WriteRegister(2, (int)result_add);
 	
-	/* Modify return point */
-	{
-	  /* set previous programm counter (debugging only)*/
-	  kernel->machine->WriteRegister(PrevPCReg, kernel->machine->ReadRegister(PCReg));
+					return IncreaseProgramCounter();
+				}
 
-	  /* set programm counter to next instruction (all Instructions are 4 byte wide)*/
-	  kernel->machine->WriteRegister(PCReg, kernel->machine->ReadRegister(PCReg) + 4);//+4 vi ly do o doan 2:00:22 cua video tu quay lai buoi demo
-	  
-	  /* set next programm counter for brach execution */
-	  kernel->machine->WriteRegister(NextPCReg, kernel->machine->ReadRegister(PCReg)+4);
-	}
+				case SC_ReadNum:
+				{
+					int result_readNum;
+					result_readNum=	SysReadNum();
+					DEBUG(dbgSys, "input: " << result_readNum << "\n");
+					kernel->machine->WriteRegister(2, result_readNum);//thanh ghi 2 la noi luu tru gia tri cua gia tri tra ve cua ReadNum() o file ReadNum.c
 
-	return;
+					return IncreaseProgramCounter();
+				}
+
+				case SC_PrintNum:
+				{
+					int num;
+					num =(int)kernel->machine->ReadRegister(4);//doc tham so truyen vao(value cac tham so truyen vao cua tat ca cac function se duoc luu vao thanh ghi 4,5,6...)
+					PrintNum(num);
+
+					return IncreaseProgramCounter();
+				}
+
+				case SC_RandomNum:
+				{
+					int randomNum = RandomNum();
+					DEBUG(dbgSys, "Random: " << randomNum << "\n");
+					kernel->machine->WriteRegister(2, randomNum);//thanh ghi 2 la noi luu tru gia tri cua gia tri tra ve cua RandomNum() o file ReadNum.c
+
+					return IncreaseProgramCounter();
+				}
 	
-	ASSERTNOTREACHED();
+				case SC_ReadChar:
+				{
+					char result_readChar;
+					result_readChar = ReadChar();
+					kernel->machine->WriteRegister(2, (int)result_readChar);
 
-	break;
+					return IncreaseProgramCounter();
+				}
 
-	case SC_ReadNum:
+				case SC_PrintChar:
+				{
+					char char_printChar;
+					char_printChar = (char) kernel->machine->ReadRegister(4);
+					kernel->synchConsoleOut->PutChar(char_printChar);
+
+					return IncreaseProgramCounter();
+				}
 	
-	result=	SysReadNum();
-	DEBUG(dbgSys, "input: " << result << "\n");
-	kernel->machine->WriteRegister(2, result);//thanh ghi 2 la noi luu tru gia tri cua gia tri tra ve cua ReadNum() o file ReadNum.c
-	{
-	  /* set previous programm counter (debugging only)*/
-	  kernel->machine->WriteRegister(PrevPCReg, kernel->machine->ReadRegister(PCReg));
-
-	  /* set programm counter to next instruction (all Instructions are 4 byte wide)*/
-	  kernel->machine->WriteRegister(PCReg, kernel->machine->ReadRegister(PCReg) + 4);//+4 vi ly do o doan 2:00:22 cua video tu quay lai buoi demo
-	  
-	  /* set next programm counter for brach execution */
-	  kernel->machine->WriteRegister(NextPCReg, kernel->machine->ReadRegister(PCReg)+4);
-	}
-	return;
-	
-	ASSERTNOTREACHED();
-
-
-	break;
-
-	case SC_PrintNum:
-	int x;
-	x=(int)kernel->machine->ReadRegister(4);//doc tham so truyen vao(value cac tham so truyen vao cua tat ca cac function se duoc luu vao thanh ghi 4,5,6...)
-	PrintNum(x);
-
-	//khong co cai Modify ben duoi thi ko hieu sao no chay mai mai lun!!!!
-	/* Modify return point */
-	{
-	  /* set previous programm counter (debugging only)*/
-	  kernel->machine->WriteRegister(PrevPCReg, kernel->machine->ReadRegister(PCReg));
-
-	  /* set programm counter to next instruction (all Instructions are 4 byte wide)*/
-	  kernel->machine->WriteRegister(PCReg, kernel->machine->ReadRegister(PCReg) + 4);//+4 vi ly do o doan 2:00:22 cua video tu quay lai buoi demo
-	  
-	  /* set next programm counter for brach execution */
-	  kernel->machine->WriteRegister(NextPCReg, kernel->machine->ReadRegister(PCReg)+4);
-	}
-	return;
-	
-	ASSERTNOTREACHED();
-
-	break;
-
-
-	case SC_RandomNum:
-	result=RandomNum();
-	DEBUG(dbgSys, "Random: " << result << "\n");
-
-	kernel->machine->WriteRegister(2, result);//thanh ghi 2 la noi luu tru gia tri cua gia tri tra ve cua RandomNum() o file ReadNum.c
-	{
-	  /* set previous programm counter (debugging only)*/
-	  kernel->machine->WriteRegister(PrevPCReg, kernel->machine->ReadRegister(PCReg));
-
-	  /* set programm counter to next instruction (all Instructions are 4 byte wide)*/
-	  kernel->machine->WriteRegister(PCReg, kernel->machine->ReadRegister(PCReg) + 4);//+4 vi ly do o doan 2:00:22 cua video tu quay lai buoi demo
-	  
-	  /* set next programm counter for brach execution */
-	  kernel->machine->WriteRegister(NextPCReg, kernel->machine->ReadRegister(PCReg)+4);
-	}
-	return;
-	
-	ASSERTNOTREACHED();
-	break;
-
-	case SC_PrintChar:
-	char c;
-	c=kernel->machine->ReadRegister(4);
-	PrintChar(c);
-	/* Modify return point */
-	{
-	  /* set previous programm counter (debugging only)*/
-	  kernel->machine->WriteRegister(PrevPCReg, kernel->machine->ReadRegister(PCReg));
-
-	  /* set programm counter to next instruction (all Instructions are 4 byte wide)*/
-	  kernel->machine->WriteRegister(PCReg, kernel->machine->ReadRegister(PCReg) + 4);//+4 vi ly do o doan 2:00:22 cua video tu quay lai buoi demo
-	  
-	  /* set next programm counter for brach execution */
-	  kernel->machine->WriteRegister(NextPCReg, kernel->machine->ReadRegister(PCReg)+4);
-	}
-	return;
-	
-
-	ASSERTNOTREACHED();
-	break;
-
-      default:
-	cerr << "Unexpected system call " << type << "\n";
-	break;
-      }
-      break;
-    default:
-      cerr << "Unexpected user mode exception" << (int)which << "\n";
-      break;
+				default:
+					cerr << "Unexpected system call " << type << "\n";
+				break;
+			}
+		}
+		default:
+			cerr << "Unexpected user mode exception" << (int)which << "\n";
+		break;
     }
     ASSERTNOTREACHED();
 }

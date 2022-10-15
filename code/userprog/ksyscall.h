@@ -14,7 +14,7 @@
 #include "kernel.h"
 #include "synchconsole.h"
 #include <stdint.h>
-#include <stdlib.h>//dung cho srand
+#include <stdlib.h>
 
 #define LF ((char)10)
 #define CR ((char)13)
@@ -181,6 +181,13 @@ int RandomNum()
 }
 
 
+<<<<<<< HEAD
+=======
+char ReadChar()
+{
+    return kernel->synchConsoleIn->GetChar();
+}
+>>>>>>> edca9505156fefe9e42bfdccfef723be71b80e1d
 void PrintChar(char x)
 {
     kernel->synchConsoleOut->PutChar(x);
