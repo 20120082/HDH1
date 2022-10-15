@@ -181,13 +181,12 @@ int RandomNum()
 }
 
 
-<<<<<<< HEAD
-=======
+
 char ReadChar()
 {
     return kernel->synchConsoleIn->GetChar();
 }
->>>>>>> edca9505156fefe9e42bfdccfef723be71b80e1d
+
 void PrintChar(char x)
 {
     kernel->synchConsoleOut->PutChar(x);
